@@ -89,12 +89,15 @@ public final class MainActivity extends Activity {
         setContentView(root);
 
         new Thread(() -> {
+            long t0 = System.currentTimeMillis();
             String r;
             try {
                 r = build();
             } catch (RuntimeException e) {
                 r = "Erro ao analisar: " + e;
             }
+            android.util.Log.i("FreeMyCar", "report in " + (System.currentTimeMillis() - t0) + " ms");
+            write("ultimo-relatorio.txt", r);    // also kept on disk: readable over USB or ADB without the screen
             final String done = r;
             runOnUiThread(() -> {
                 report = done;
@@ -148,6 +151,10 @@ public final class MainActivity extends Activity {
         ResolveInfo home = pm.resolveActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), 0);
         line(b, "tela inicial", home == null ? "?" : home.activityInfo.packageName);
 
+        java.util.Set<String> icons = new java.util.HashSet<>();   // one query, not one per app (slow on weak units)
+        for (ResolveInfo r : pm.queryIntentActivities(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)) {
+            icons.add(r.activityInfo.packageName);
+        }
         List<PackageInfo> all = pm.getInstalledPackages(0);
         Collections.sort(all, (x, y) -> x.packageName.compareTo(y.packageName));
 
@@ -170,7 +177,7 @@ public final class MainActivity extends Activity {
             StringBuilder f = new StringBuilder();
             if ((a.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) f.append(" atualizado");
             if (!a.enabled) f.append(" desligado");
-            if (pm.getLaunchIntentForPackage(p.packageName) != null) f.append(" ícone");
+            if (icons.contains(p.packageName)) f.append(" ícone");
             String label = String.valueOf(a.loadLabel(pm)).replace('\n', ' ').trim();
             (sys ? system : user).add(p.packageName + " | " + label + " | " + p.versionName + " |" + f);
         }
@@ -235,17 +242,19 @@ public final class MainActivity extends Activity {
     /** To the app's folder on the internal storage (Android/data/io.freemycar/files): no permission needed. */
     private void save() {
         if (report.isEmpty()) return;
+        File f = write("free-my-car-" + new SimpleDateFormat("yyyyMMdd-HHmm", Locale.ROOT).format(new Date()) + ".txt", report);
+        toast(f != null ? "Salvo em " + f.getPath() : "Não consegui salvar.");
+    }
+
+    private File write(String name, String content) {
         File dir = getExternalFilesDir(null);
-        if (dir == null) {
-            toast("Armazenamento indisponível.");
-            return;
-        }
-        File f = new File(dir, "free-my-car-" + new SimpleDateFormat("yyyyMMdd-HHmm", Locale.ROOT).format(new Date()) + ".txt");
+        if (dir == null) return null;
+        File f = new File(dir, name);
         try (FileOutputStream out = new FileOutputStream(f)) {
-            out.write(report.getBytes("UTF-8"));
-            toast("Salvo em " + f.getPath());
+            out.write(content.getBytes("UTF-8"));
+            return f;
         } catch (Exception e) {
-            toast("Não consegui salvar: " + e.getMessage());
+            return null;
         }
     }
 
