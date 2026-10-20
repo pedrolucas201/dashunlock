@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.freemycar"
+    package="io.dashunlock"
     android:versionCode="1"
     android:versionName="0.1">
 
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
-        android:label="Free My Car"
+        android:label="DashUnlock"
         android:icon="@android:drawable/ic_menu_search"
         android:allowBackup="false">
         <activity

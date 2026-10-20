@@ -1,4 +1,4 @@
-# Free My Car
+# DashUnlock
 
 **PT-BR** · Descubra o que vem escondido na sua central multimídia Android.
 
@@ -10,12 +10,12 @@ Esta primeira versão é um **inspetor só de leitura**: não altera nada, não 
 - O hardware real (chip, RAM, armazenamento) e o **Android real** por trás do número anunciado.
 - Todos os apps de sistema e de fábrica.
 - Alerta para pacotes de risco conhecidos, cada um com fonte.
-- Um relatório para compartilhar (ou salvar em `Android/data/io.freemycar/files`).
+- Um relatório para compartilhar (ou salvar em `Android/data/io.dashunlock/files`).
 
 ### Como testar na sua central
-1. Baixe o `FreeMyCar.apk` em [Releases](../../releases) e copie para um pen drive (ou baixe pelo navegador da central).
+1. Baixe o `DashUnlock.apk` em [Releases](../../releases) e copie para um pen drive (ou baixe pelo navegador da central).
 2. Abra o arquivo no gerenciador de arquivos da central e instale (pode ser preciso permitir "fontes desconhecidas").
-3. Abra **Free My Car** e toque em **Compartilhar** ou **Salvar**.
+3. Abra **DashUnlock** e toque em **Compartilhar** ou **Salvar**.
 4. Mande o relatório numa [issue](../../issues/new). Cada relatório ajuda a montar as listas do que é lixo e do que é
    essencial em cada modelo, para a próxima versão desligar o lixo com segurança.
 

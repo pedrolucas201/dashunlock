@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds FreeMyCar.apk without Gradle: aapt2 -> javac -> d8 -> zipalign -> apksigner.
+# Builds DashUnlock.apk without Gradle: aapt2 -> javac -> d8 -> zipalign -> apksigner.
 # Needs a JDK (17+) and the Android SDK (build-tools 34+, a platform android-33 or newer). Runs on Linux, macOS and
 # Windows (Git Bash).
 set -euo pipefail
@@ -30,11 +30,11 @@ rm -rf out && mkdir -p out/classes
 (cd out && "${J}jar" -u -M -f base.apk classes.dex)
 "$BT/zipalign" -f -p 4 out/base.apk out/aligned.apk
 
-# Your own signing key, created once (updates need the same key: keep freemycar.keystore).
-if [ ! -f freemycar.keystore ]; then
-  "${J}keytool" -genkeypair -keystore freemycar.keystore -alias freemycar -keyalg RSA -keysize 2048 -validity 20000 \
-    -storepass freemycar -keypass freemycar -dname "CN=Free My Car" >/dev/null 2>&1
+# Your own signing key, created once (updates need the same key: keep dashunlock.keystore).
+if [ ! -f dashunlock.keystore ]; then
+  "${J}keytool" -genkeypair -keystore dashunlock.keystore -alias dashunlock -keyalg RSA -keysize 2048 -validity 20000 \
+    -storepass dashunlock -keypass dashunlock -dname "CN=DashUnlock" >/dev/null 2>&1
 fi
-"$BT/apksigner$BAT" sign --ks freemycar.keystore --ks-pass pass:freemycar --key-pass pass:freemycar \
-  --out FreeMyCar.apk out/aligned.apk
-echo "Built FreeMyCar.apk ($(du -h FreeMyCar.apk | cut -f1)). Install: adb install -r FreeMyCar.apk"
+"$BT/apksigner$BAT" sign --ks dashunlock.keystore --ks-pass pass:dashunlock --key-pass pass:dashunlock \
+  --out DashUnlock.apk out/aligned.apk
+echo "Built DashUnlock.apk ($(du -h DashUnlock.apk | cut -f1)). Install: adb install -r DashUnlock.apk"

@@ -1,4 +1,4 @@
-package io.freemycar;
+package io.dashunlock;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Free My Car Inspector: shows what is really inside an Android head unit (hardware, the real Android version, the
+ * DashUnlock Inspector: shows what is really inside an Android head unit (hardware, the real Android version, the
  * apps that came with it, known risky packages) and lets the person share the report. Read-only: it changes nothing.
  */
 public final class MainActivity extends Activity {
@@ -69,7 +69,7 @@ public final class MainActivity extends Activity {
         LinearLayout bar = new LinearLayout(this);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         TextView title = new TextView(this);
-        title.setText("Free My Car · Inspetor " + VERSION);
+        title.setText("DashUnlock · Inspetor " + VERSION);
         title.setTextColor(0xFFFFFFFF);
         title.setTextSize(22);
         bar.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
@@ -96,7 +96,7 @@ public final class MainActivity extends Activity {
             } catch (RuntimeException e) {
                 r = "Erro ao analisar: " + e;
             }
-            android.util.Log.i("FreeMyCar", "report in " + (System.currentTimeMillis() - t0) + " ms");
+            android.util.Log.i("DashUnlock", "report in " + (System.currentTimeMillis() - t0) + " ms");
             write("ultimo-relatorio.txt", r);    // also kept on disk: readable over USB or ADB without the screen
             final String done = r;
             runOnUiThread(() -> {
@@ -110,7 +110,7 @@ public final class MainActivity extends Activity {
 
     private String build() {
         StringBuilder b = new StringBuilder();
-        b.append("Free My Car Inspetor ").append(VERSION).append(" · ")
+        b.append("DashUnlock Inspetor ").append(VERSION).append(" · ")
                 .append(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(new Date())).append('\n');
         b.append("Só leitura: nada foi alterado.\n\n");
 
@@ -231,7 +231,7 @@ public final class MainActivity extends Activity {
     private void share() {
         if (report.isEmpty()) return;
         Intent send = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, report)
-                .putExtra(Intent.EXTRA_SUBJECT, "Free My Car: " + Build.MANUFACTURER + " " + Build.MODEL);
+                .putExtra(Intent.EXTRA_SUBJECT, "DashUnlock: " + Build.MANUFACTURER + " " + Build.MODEL);
         try {
             startActivity(Intent.createChooser(send, "Compartilhar relatório"));
         } catch (RuntimeException e) {
@@ -239,10 +239,10 @@ public final class MainActivity extends Activity {
         }
     }
 
-    /** To the app's folder on the internal storage (Android/data/io.freemycar/files): no permission needed. */
+    /** To the app's folder on the internal storage (Android/data/io.dashunlock/files): no permission needed. */
     private void save() {
         if (report.isEmpty()) return;
-        File f = write("free-my-car-" + new SimpleDateFormat("yyyyMMdd-HHmm", Locale.ROOT).format(new Date()) + ".txt", report);
+        File f = write("dashunlock-" + new SimpleDateFormat("yyyyMMdd-HHmm", Locale.ROOT).format(new Date()) + ".txt", report);
         toast(f != null ? "Salvo em " + f.getPath() : "Não consegui salvar.");
     }
 
